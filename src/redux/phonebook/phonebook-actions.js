@@ -1,27 +1,13 @@
 import types from "./phonebook-types";
-import { nanoid } from "nanoid/non-secure";
+import { createAction, nanoid } from "@reduxjs/toolkit";
 
-const setFilterQuery = (query) => ({
-  type: types.FILTER_QUERY,
-  payload: query,
-});
-
-const setNameValue = (name) => ({
-  type: types.NAME,
-  payload: name,
-});
-const setNumberValue = (number) => ({
-  type: types.NUMBER,
-  payload: number,
-});
-const submitValue = (data) => ({
-  type: types.SUBMIT,
+const setFilterQuery = createAction(types.FILTER_QUERY);
+const setNameValue = createAction(types.NAME);
+const setNumberValue = createAction(types.NUMBER);
+const deleteValue = createAction(types.DELETE);
+const submitValue = createAction(types.SUBMIT, (data) => ({
   payload: { name: data[0].toLowerCase(), number: data[1], id: nanoid() },
-});
-const deleteValue = (name) => ({
-  type: types.DELETE,
-  payload: name,
-});
+}));
 
 const phonebookActions = {
   setFilterQuery,

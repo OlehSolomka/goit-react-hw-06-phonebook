@@ -1,53 +1,42 @@
-import types from "./phonebook-types";
+import { createReducer } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
+import phonebookActions from "./phonebook-actions";
 
-const formReducer = (state = { name: "", number: "" }, { type, payload }) => {
-  switch (type) {
-    case types.NAME:
-      return {
-        ...state,
-        name: payload,
-      };
-    case types.NUMBER:
-      return {
-        ...state,
-        number: payload,
-      };
-
-    default:
+const contactReducer = createReducer([], {
+  [phonebookActions.submitValue]: (state, { payload }) => {
+    if (state.find((el) => el.name === payload.name)) {
+      alert(`${payload.name} is already in contacts`);
       return state;
-  }
-};
-const contactReducer = (state = [], { type, payload }) => {
-  switch (type) {
-    case types.SUBMIT: {
-      if (state.find((el) => el.name === payload.name)) {
-        alert(`${payload.name} is already in contacts`);
-        return state;
-      }
-      return [...state, payload];
     }
+    return [...state, payload];
+  },
+  [phonebookActions.deleteValue]: (state, { payload }) =>
+    state.filter((unit) => unit.name !== payload),
+});
 
-    case types.DELETE:
-      return state.filter((unit) => unit.name !== payload);
-
-    default:
-      return state;
+const filterReducer = createReducer(
+  { query: "" },
+  {
+    [phonebookActions.setFilterQuery]: (state, { payload }) => ({
+      ...state,
+      query: payload,
+    }),
   }
-};
+);
 
-const filterReducer = (state = { query: "" }, { type, payload }) => {
-  switch (type) {
-    case types.FILTER_QUERY:
-      return {
-        ...state,
-        query: payload,
-      };
-
-    default:
-      return state;
+const formReducer = createReducer(
+  { name: "", number: "" },
+  {
+    [phonebookActions.setNameValue]: (state, { payload }) => ({
+      ...state,
+      name: payload,
+    }),
+    [phonebookActions.setNumberValue]: (state, { payload }) => ({
+      ...state,
+      number: payload,
+    }),
   }
-};
+);
 
 export default combineReducers({
   form: formReducer,

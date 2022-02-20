@@ -1,12 +1,16 @@
 import "./styles/base.scss";
-import { connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import phonebookActions from "./redux/phonebook/phonebook-actions";
 import Section from "./components/Section";
 import Form from "./components/Form";
 import Contactlist from "./components/Contactlist";
 import Filter from "./components/Filter";
 
-const App = ({ contacts, onDelete, filterQuery }) => {
+const App = () => {
+  const dispatch = useDispatch();
+  const contacts = useSelector(({ phonebook: { contacts } }) => contacts);
+  const filterQuery = useSelector(({ phonebook: { filter } }) => filter.query);
+
   const getVIsibleContacts = () => {
     const normalizedFilter = filterQuery.toLowerCase();
 
@@ -23,17 +27,13 @@ const App = ({ contacts, onDelete, filterQuery }) => {
       <Form />
       <Section title={"Contacts"}>
         <Filter />
-        <Contactlist contacts={filteredItems} onDelete={onDelete} />
+        <Contactlist
+          contacts={filteredItems}
+          onDelete={(name) => dispatch(phonebookActions.deleteValue(name))}
+        />
       </Section>
     </div>
   );
 };
 
-const mapStateToProps = ({ phonebook: { contacts, filter } }) => ({
-  contacts,
-  filterQuery: filter.query,
-});
-const mapDispatchToProps = (dispatch) => ({
-  onDelete: (name) => dispatch(phonebookActions.deleteValue(name)),
-});
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
