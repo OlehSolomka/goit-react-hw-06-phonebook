@@ -1,6 +1,6 @@
 import "./styles/base.scss";
 import { useSelector, useDispatch } from "react-redux";
-import phonebookActions from "./redux/phonebook/phonebook-actions";
+import { deleteValue } from "./redux/phonebook/contactSlice";
 import Section from "./components/Section";
 import Form from "./components/Form";
 import Contactlist from "./components/Contactlist";
@@ -8,8 +8,8 @@ import Filter from "./components/Filter";
 
 const App = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(({ phonebook: { contacts } }) => contacts);
-  const filterQuery = useSelector(({ phonebook: { filter } }) => filter.query);
+  const contacts = useSelector(({ phonebook }) => phonebook.contacts);
+  const filterQuery = useSelector(({ phonebook }) => phonebook.filter.query);
 
   const getVIsibleContacts = () => {
     const normalizedFilter = filterQuery.toLowerCase();
@@ -29,7 +29,7 @@ const App = () => {
         <Filter />
         <Contactlist
           contacts={filteredItems}
-          onDelete={(name) => dispatch(phonebookActions.deleteValue(name))}
+          onDelete={(name) => dispatch(deleteValue(name))}
         />
       </Section>
     </div>

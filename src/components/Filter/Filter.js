@@ -1,10 +1,10 @@
 import "./filter.scss";
 import { useSelector, useDispatch } from "react-redux";
-import phonebookActions from "../../redux/phonebook/phonebook-actions";
+import { setFilterQuery } from "../../redux/phonebook/filterSlice";
 
 const Filter = () => {
   const dispatch = useDispatch();
-  const query = useSelector(({ phonebook: { filter } }) => filter.query);
+  const query = useSelector(({ phonebook }) => phonebook.filter.query);
 
   return (
     <>
@@ -12,9 +12,7 @@ const Filter = () => {
         value={query}
         type="text"
         name="filter"
-        onChange={(e) =>
-          dispatch(phonebookActions.setFilterQuery(e.target.value))
-        }
+        onChange={(e) => dispatch(setFilterQuery(e.target.value))}
       ></input>
     </>
   );
